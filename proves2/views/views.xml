@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="proves2.list">
+      <field name="name">proves2 list</field>
+      <field name="model">proves2.proves2</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="proves2.action_window">
+      <field name="name">proves2 window</field>
+      <field name="res_model">proves2.proves2</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="proves2.action_server">
+      <field name="name">proves2 server</field>
+      <field name="model_id" ref="model_proves2_proves2"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="proves2" id="proves2.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="proves2.menu_1" parent="proves2.menu_root"/>
+    <menuitem name="Menu 2" id="proves2.menu_2" parent="proves2.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="proves2.menu_1_list" parent="proves2.menu_1"
+              action="proves2.action_window"/>
+    <menuitem name="Server to list" id="proves2" parent="proves2.menu_2"
+              action="proves2.action_server"/>
+    -->
+  </data>
+</odoo>

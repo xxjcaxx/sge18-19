@@ -1,0 +1,89 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="proves1.list">
+      <field name="name">proves1 list</field>
+      <field name="model">proves1.proves1</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+          <field name="pais"/>
+        </tree>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="proves1.students_list">
+      <field name="name">proves1 list</field>
+      <field name="model">proves1.student</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="country"/>
+          <field name="currency"/>
+          <field name="aleatori"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="proves1.action_window">
+      <field name="name">proves1 window</field>
+      <field name="res_model">proves1.proves1</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="proves1.action_course_window">
+      <field name="name">proves1 window</field>
+      <field name="res_model">proves1.course</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="proves1.action_student_window">
+      <field name="name">proves1 window</field>
+      <field name="res_model">proves1.student</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="proves1.action_teacher_window">
+      <field name="name">proves1 window</field>
+      <field name="res_model">proves1.teacher</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="proves1.action_eval_window">
+      <field name="name">proves1 window</field>
+      <field name="res_model">proves1.eval</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="proves1.action_subject_window">
+      <field name="name">proves1 window</field>
+      <field name="res_model">proves1.subject</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="proves1.action_server">
+      <field name="name">proves1 server</field>
+      <field name="model_id" ref="model_proves1_proves1"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <menuitem name="proves1" id="proves1.menu_root"/>
+    <!-- menu categories -->
+    <menuitem name="Menu 1" id="proves1.menu_1" parent="proves1.menu_root"/>
+    <!-- actions -->
+    <menuitem name="List" id="proves1.menu_1_list" parent="proves1.menu_1" action="proves1.action_window"/>
+    <menuitem name="Courses" id="proves1.menu_2_list" parent="proves1.menu_1" action="proves1.action_course_window"/>
+    <menuitem name="Students" id="proves1.menu_3_list" parent="proves1.menu_1" action="proves1.action_student_window"/>
+    <menuitem name="Teachers" id="proves1.menu_4_list" parent="proves1.menu_1" action="proves1.action_teacher_window"/>
+    <menuitem name="Subjects" id="proves1.menu_6_list" parent="proves1.menu_1" action="proves1.action_subject_window"/>
+    <menuitem name="Evaluation" id="proves1.menu_5_list" parent="proves1.menu_1" action="proves1.action_eval_window"/>
+  </data>
+</odoo>
