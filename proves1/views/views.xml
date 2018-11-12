@@ -13,11 +13,23 @@
         </tree>
       </field>
     </record>
+    <record model="ir.ui.view" id="proves1.courses_cal">
+      <field name="name">proves1 calendar</field>
+      <field name="model">proves1.course</field>
+      <field name="arch" type="xml">
+        <calendar date_start="start_date" date_stop="end_date" color="name">
+          <field name="name"/>
+          <field name="tutor"/>
+        </calendar>
+      </field>
+    </record>
     <record model="ir.ui.view" id="proves1.students_list">
       <field name="name">proves1 list</field>
       <field name="model">proves1.student</field>
       <field name="arch" type="xml">
-        <tree>
+        <tree decoration-danger="name=='Pepito'">
+		<field name="photo_small" widget="image"/>
+
           <field name="name"/>
           <field name="country"/>
           <field name="currency"/>
@@ -26,6 +38,80 @@
       </field>
     </record>
 
+    <record model="ir.ui.view" id="proves1.students_form">
+      <field name="name">proves1 form</field>
+      <field name="model">proves1.student</field>
+      <field name="arch" type="xml">
+	      <form>
+		      <sheet>
+			      <group>
+				      <group>	      
+	  <field name="photo_small" widget="image"/>
+  </group>
+  <group>
+	  <h1> <label for="name"/> <field name="name"/></h1>
+          <field name="country"/>
+          <field name="currency"/>
+	  <field name="aleatori"/>
+  </group>
+  </group>
+  <notebook>
+  <page string="Photos">
+	  <field name="photo" widget="image" class="oe_edit_only"/>
+  </page>
+  <page string="Subjects">
+	  <group>
+		  <field name="subjects" context="{'default_student':active_id}">
+			  <tree>
+				  <field name="name"/>
+				  <field name="start_date"/>
+				  <field name="evaluation"/>
+				  <field name="subject"/>
+			  </tree>
+		  </field>
+	  </group>
+  </page>
+  </notebook>
+  </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="proves1.students_kanban">
+      <field name="name">proves1 kanban</field>
+      <field name="model">proves1.student</field>
+      <field name="arch" type="xml">
+                  <kanban>
+                    <!--list of field to be loaded -->
+		    <field name="photo_small"/>
+		    <field name="id"/>
+		  <field name="name"/>
+		  <field name="country"/>
+		  <field name="currency"/>
+		  <field name="aleatori"/>
+
+                    <templates>
+                    <t t-name="kanban-box">
+                            <div class="oe_product_vignette">
+                                <a type="open">
+	<img t-att-src="kanban_image('proves1.student', 'photo_small', record.id.raw_value)" /> 
+                                </a>
+                                <div class="oe_product_desc">
+                                    <h4>
+                                        <a type="edit">
+                                            <field name="name"></field>
+				  <field name="country"/>
+				  <field name="currency"/>
+				  <field name="aleatori"/>
+                                        </a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+      </field>
+    </record>
     <!-- actions opening views on models -->
     <record model="ir.actions.act_window" id="proves1.action_window">
       <field name="name">proves1 window</field>
@@ -35,12 +121,12 @@
     <record model="ir.actions.act_window" id="proves1.action_course_window">
       <field name="name">proves1 window</field>
       <field name="res_model">proves1.course</field>
-      <field name="view_mode">tree,form</field>
+      <field name="view_mode">tree,form,calendar</field>
     </record>
     <record model="ir.actions.act_window" id="proves1.action_student_window">
       <field name="name">proves1 window</field>
       <field name="res_model">proves1.student</field>
-      <field name="view_mode">tree,form</field>
+      <field name="view_mode">tree,form,kanban</field>
     </record>
     <record model="ir.actions.act_window" id="proves1.action_teacher_window">
       <field name="name">proves1 window</field>
@@ -58,21 +144,6 @@
       <field name="res_model">proves1.subject</field>
       <field name="view_mode">tree,form</field>
     </record>
-    <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="proves1.action_server">
-      <field name="name">proves1 server</field>
-      <field name="model_id" ref="model_proves1_proves1"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
-      </field>
-    </record>
-    -->
 
     <!-- Top menu item -->
     <menuitem name="proves1" id="proves1.menu_root"/>

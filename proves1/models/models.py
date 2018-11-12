@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, tools
 import random
+from openerp.exceptions import ValidationError
 
 class proves1(models.Model):
      _name = 'proves1.proves1'
@@ -25,6 +26,8 @@ class course(models.Model):
                             relation='courses_tutors',
                             column1='course',
                             column2='tutor')
+    start_date = fields.Date()
+    end_date = fields.Date()
 
 class student(models.Model):
     _name = 'proves1.student'
@@ -37,11 +40,21 @@ class student(models.Model):
     a = fields.Integer()
     b = fields.Integer()
     ab = fields.Integer(compute='_get_ab')
+    photo = fields.Binary()
+    photo_small = fields.Binary(compute='_get_resized_image',store=True)
+    
+    @api.depends('photo')
+    def _get_resized_image(self):
+        for s in self:
+            data = tools.image_get_resized_images(s.photo)
+            s.photo_small = data['image_small']
+
 
     @api.multi
     def _compute_aleatori(self):
       for record in self:
-        record.aleatori = str(random.randint(1, 1e6))+str(record.country.currency_id.symbol)
+          record.aleatori = 1
+        #record.aleatori = str(random.randint(1, 1e6))+str(record.country.currency_id.symbol)
 
     @api.depends('a','b')
     def _get_ab(self):
@@ -65,8 +78,16 @@ class subject(models.Model):
 class evaluation(models.Model):
     _name = 'proves1.eval'
     name = fields.Char()
+    start_date = fields.Datetime(default=lambda self: fields.Datetime.now())
     evaluation = fields.Float()
     student = fields.Many2one('proves1.student')
     subject = fields.Many2one('proves1.subject')
 
+
+
+    @api.constrains('evaluation')
+    def _check_something(self):
+     for record in self:
+        if record.evaluation > 10 or record.evaluation < 0:
+            raise ValidationError("You can't put more than 10 or less than 0: %s" % record.evaluation)
 
