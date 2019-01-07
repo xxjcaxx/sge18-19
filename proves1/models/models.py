@@ -20,7 +20,7 @@ class proves1(models.Model):
 class course(models.Model):
     _name = 'proves1.course'
     name = fields.Char()
-    students = fields.One2many('proves1.student','course')
+    students = fields.One2many('res.partner','course')
     teachers = fields.Many2many('proves1.teacher')
     tutor = fields.Many2many(comodel_name='proves1.teacher',
                             relation='courses_tutors',
@@ -30,24 +30,26 @@ class course(models.Model):
     end_date = fields.Date()
 
 class student(models.Model):
-    _name = 'proves1.student'
-    name = fields.Char()
+    _name = 'res.partner'
+    _inherit = 'res.partner'
+    #name = fields.Char()
     course = fields.Many2one('proves1.course')
     subjects = fields.One2many('proves1.eval','student')
-    country = fields.Many2one('res.country')
-    currency = fields.Char(related='country.currency_id.symbol',store=False,readonly=True)
+    is_student = fields.Boolean()
+    #country = fields.Many2one('res.country')
+    #currency = fields.Char(related='country.currency_id.symbol',store=False,readonly=True)
     aleatori = fields.Char(compute='_compute_aleatori')
     a = fields.Integer()
     b = fields.Integer()
     ab = fields.Integer(compute='_get_ab')
-    photo = fields.Binary()
-    photo_small = fields.Binary(compute='_get_resized_image',store=True)
+    #photo = fields.Binary()
+    #photo_small = fields.Binary(compute='_get_resized_image',store=True)
     
-    @api.depends('photo')
-    def _get_resized_image(self):
-        for s in self:
-            data = tools.image_get_resized_images(s.photo)
-            s.photo_small = data['image_small']
+#    @api.depends('photo')
+#    def _get_resized_image(self):
+#        for s in self:
+#            data = tools.image_get_resized_images(s.photo)
+#            s.photo_small = data['image_small']
 
 
     @api.multi
@@ -63,7 +65,8 @@ class student(models.Model):
 
 class teacher(models.Model):
     _name = 'proves1.teacher'
-    name = fields.Char()
+    _inherits = {'res.partner':'partner_id'}
+    #name = fields.Char()
     courses = fields.Many2many('proves1.course')
     tutor = fields.Many2many(comodel_name='proves1.course',
                             relation='courses_tutors',
@@ -80,7 +83,7 @@ class evaluation(models.Model):
     name = fields.Char()
     start_date = fields.Datetime(default=lambda self: fields.Datetime.now())
     evaluation = fields.Float()
-    student = fields.Many2one('proves1.student')
+    student = fields.Many2one('res.partner')
     subject = fields.Many2one('proves1.subject')
 
 

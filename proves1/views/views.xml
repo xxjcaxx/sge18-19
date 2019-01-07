@@ -23,41 +23,77 @@
         </calendar>
       </field>
     </record>
-    <record model="ir.ui.view" id="proves1.students_list">
+      <record model="ir.ui.view" id="proves1.partners_list">
       <field name="name">proves1 list</field>
-      <field name="model">proves1.student</field>
+      <field name="model">res.partner</field>
       <field name="arch" type="xml">
         <tree decoration-danger="name=='Pepito'">
-		<field name="photo_small" widget="image"/>
 
           <field name="name"/>
-          <field name="country"/>
-          <field name="currency"/>
+          <field name="country_id"/>
+           
           <field name="aleatori"/>
         </tree>
       </field>
     </record>
+  <record model="ir.ui.view" id="proves1.partners_search">
+      <field name="name">proves1 list</field>
+      <field name="model">res.partner</field>
+      <field name="arch" type="xml">
+        <search>
 
-    <record model="ir.ui.view" id="proves1.students_form">
+          <field name="name"/>
+          <field name="country_id"/>
+           
+	  <field name="aleatori"/>
+	  <filter name="is_student" string="Is Student" domain="[('is_student', '=', True)]"/>
+        </search>
+      </field>
+    </record>
+
+    <!--- Vista heretada de student -->
+      <record model="ir.ui.view" id="proves1.students_form">
+      <field name="name">Students Form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+
+	      <field name="vat" position="after">
+ 		<field name="aleatori"/>
+	</field>
+	<xpath expr="//page[@name='internal_notes']" position="after">
+		<page name="student" string="Students">
+			<group>
+			<field name="is_student"/>
+			<field name="a"/>
+			<field name="b"/>
+			<field name="ab"/>
+		</group>	
+		</page>
+	</xpath>
+           
+      </field>
+    </record>
+
+
+       <record model="ir.ui.view" id="proves1.partners_form">
       <field name="name">proves1 form</field>
-      <field name="model">proves1.student</field>
+      <field name="model">res.partner</field>
       <field name="arch" type="xml">
 	      <form>
 		      <sheet>
 			      <group>
 				      <group>	      
-	  <field name="photo_small" widget="image"/>
   </group>
   <group>
 	  <h1> <label for="name"/> <field name="name"/></h1>
-          <field name="country"/>
-          <field name="currency"/>
+          <field name="country_id"/>
+          <field name="is_student"/>
 	  <field name="aleatori"/>
   </group>
   </group>
   <notebook>
   <page string="Photos">
-	  <field name="photo" widget="image" class="oe_edit_only"/>
   </page>
   <page string="Subjects">
 	  <group>
@@ -76,32 +112,30 @@
         </form>
       </field>
     </record>
-
-    <record model="ir.ui.view" id="proves1.students_kanban">
+    <!-- 
+  <record model="ir.ui.view" id="proves1.partners_kanban">
       <field name="name">proves1 kanban</field>
-      <field name="model">proves1.student</field>
+      <field name="model">res.partner</field>
       <field name="arch" type="xml">
                   <kanban>
-                    <!--list of field to be loaded -->
-		    <field name="photo_small"/>
 		    <field name="id"/>
 		  <field name="name"/>
 		  <field name="country"/>
-		  <field name="currency"/>
+		   
 		  <field name="aleatori"/>
 
                     <templates>
                     <t t-name="kanban-box">
                             <div class="oe_product_vignette">
                                 <a type="open">
-	<img t-att-src="kanban_image('proves1.student', 'photo_small', record.id.raw_value)" /> 
+	<img t-att-src="kanban_image('res.partner', 'photo_small', record.id.raw_value)" /> 
                                 </a>
                                 <div class="oe_product_desc">
                                     <h4>
                                         <a type="edit">
                                             <field name="name"></field>
 				  <field name="country"/>
-				  <field name="currency"/>
+				   
 				  <field name="aleatori"/>
                                         </a>
                                     </h4>
@@ -112,6 +146,7 @@
                 </kanban>
       </field>
     </record>
+--> 
     <!-- actions opening views on models -->
     <record model="ir.actions.act_window" id="proves1.action_window">
       <field name="name">proves1 window</field>
@@ -125,9 +160,28 @@
     </record>
     <record model="ir.actions.act_window" id="proves1.action_student_window">
       <field name="name">proves1 window</field>
-      <field name="res_model">proves1.student</field>
+      <field name="res_model">res.partner</field>
       <field name="view_mode">tree,form,kanban</field>
+      <field name="domain">[('is_student','=',True)]</field>
+      <field name="context">{'default_is_student':True}</field>
     </record>
+
+ 
+<record model="ir.actions.act_window.view" id="proves1.action_view_students_tree">
+    <field eval="1" name="sequence"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="proves1.partners_list"/>
+    <field name="act_window_id" ref="proves1.action_student_window"/>
+</record>
+ 
+<record model="ir.actions.act_window.view" id="proves1.action_view_students_form">
+    <field eval="2" name="sequence"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="proves1.partners_form"/>
+    <field name="act_window_id" ref="proves1.action_student_window"/>
+</record>
+
+
     <record model="ir.actions.act_window" id="proves1.action_teacher_window">
       <field name="name">proves1 window</field>
       <field name="res_model">proves1.teacher</field>
