@@ -1,0 +1,69 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="wizards.form_teatres">
+      <field name="name">wizards list</field>
+      <field name="model">wizards.teatres</field>
+      <field name="arch" type="xml">
+	      <form><sheet><group>
+          <field name="name"/>
+          <field name="actuacions"/>
+	  <field name="butaques"/>
+	  <button name="generar_butaques" string="Generar butaques" type="object"/>
+	  </group></sheet>
+        </form>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="wizards.form_obres">
+      <field name="name">wizards list</field>
+      <field name="model">wizards.obres</field>
+      <field name="arch" type="xml">
+	      <form><sheet><group>
+          <field name="name"/>
+          <field name="actuacions"/>
+	  <button name="generar_actuacions" string="Generar actuacions" type="object"/>
+	  </group></sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="wizards.action_window_teatres">
+      <field name="name">wizards window</field>
+      <field name="res_model">wizards.teatres</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="wizards.action_window_obres">
+      <field name="name">wizards window</field>
+      <field name="res_model">wizards.obres</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="wizards.action_window_actuacions">
+      <field name="name">wizards window</field>
+      <field name="res_model">wizards.actuacions</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="wizards.action_window_butaques">
+      <field name="name">wizards window</field>
+      <field name="res_model">wizards.butaques</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="wizards.action_window_reserves">
+      <field name="name">wizards window</field>
+      <field name="res_model">wizards.reserves</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- Top menu item -->
+    <menuitem name="wizards" id="wizards.menu_root"/>
+    <!-- menu categories -->
+    <menuitem name="Menu1" id="wizards.menu_1" parent="wizards.menu_root"/>
+    <!-- actions -->
+    <menuitem name="teatres" id="wizards.menu_1_list" parent="wizards.menu_1" action="wizards.action_window_teatres"/>
+    <menuitem name="obres" id="wizards.menu_2_list" parent="wizards.menu_1" action="wizards.action_window_obres"/>
+    <menuitem name="actuacions" id="wizards.menu_3_list" parent="wizards.menu_1" action="wizards.action_window_actuacions"/>
+    <menuitem name="butaques" id="wizards.menu_4_list" parent="wizards.menu_1" action="wizards.action_window_butaques"/>
+    <menuitem name="reserves" id="wizards.menu_5_list" parent="wizards.menu_1" action="wizards.action_window_reserves"/>
+  </data>
+</odoo>
