@@ -5,7 +5,10 @@
             <field name="model">wizards.w_reserves</field>
             <field name="arch" type="xml">
 		    <form>
-	             <header>
+                    <header>
+			    <button states="fin" name="reserva" type="object"
+					    string="Reserva" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <group>
@@ -21,12 +24,7 @@
                         <field name="butaca"/>
  
                     </group>
-                    <footer>
-			    <button states="fin" name="reserva" type="object"
-					    string="Reserva" class="oe_highlight"/>
-                        or
-                        <button special="cancel" string="Cancel"/>
-                    </footer>
+
  
                 </form>
             </field>
@@ -46,12 +44,17 @@
       <field name="name">wizards list</field>
       <field name="model">wizards.teatres</field>
       <field name="arch" type="xml">
-	      <form><sheet><group>
+	      <form><sheet>
+	      <header>
+	       <button name="%(wizards.w_reserves_action)d" string="Crear Reserva" type="action"/>
+	      </header>
+	      <group>
+
           <field name="name"/>
           <field name="actuacions"/>
 	  <field name="butaques"/>
 	  <button name="generar_butaques" string="Generar butaques" type="object"/>
-	  <button name="%(wizards.w_reserves_action)d" string="Crear Reserva" type="action"/>
+
 	  </group></sheet>
         </form>
       </field>
