@@ -26,7 +26,7 @@ class obres(models.Model):
          for o in self:
              for t in self.env['wizards.teatres'].search([]):
                  for i in range(1,10):
-                     data = fields.Datetime.to_string(fields.Datetime.from_string(fields.Datetime.now())+timedelta(days=1))
+                     data = fields.Datetime.to_string(fields.Datetime.from_string(fields.Datetime.now())+timedelta(days=i))
                      self.env['wizards.actuacions'].create({'name':str(o.name)+str(t.name)+str(i),'teatre':t.id,'obra':o.id,'data':data})
 
 class actuacions(models.Model):
@@ -49,7 +49,7 @@ class reserves(models.Model):
 class butaques(models.Model):
      _name = 'wizards.butaques'
 
-     name = fields.Integer()
+     name = fields.Integer('Butac')
      teatre = fields.Many2one('wizards.teatres')
 
 
