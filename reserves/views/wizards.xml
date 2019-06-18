@@ -1,0 +1,100 @@
+<odoo><data>
+
+        <record model="ir.ui.view" id="reserves.w_clients_bookings">
+            <field name="name">Wizard Clients Bookings</field>
+            <field name="model">reserves.w_clients_bookings</field>
+            <field name="arch" type="xml">
+                <form string="Select bookings">
+                    <group>
+                        <field name="client"/>
+                        <field name="bookings" domain="[('id','in',bookings_fs)]"/>
+			<!-- Sols mostra els possibles, en cas de que el client elimine algun -->	
+			<field name="bookings_fs" invisible="1" />
+			<!-- bookings_fs és sols un auxiliar amb la llista de tots els possibles-->
+ 
+                    </group>
+                    <footer>
+                        <button name="accept" type="object"
+                                string="Accept" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+ 
+                </form>
+            </field>
+        </record>
+ 
+        <act_window id="reserves.act_w_clients_bookings"
+                    name="Select bookings"
+                    src_model="res.partner"
+                    res_model="reserves.w_clients_bookings"
+                    view_mode="form"
+                    target="new"
+                    key2="client_action_multi"/>		
+     
+
+       <record model="ir.ui.view" id="reserves.w_bookings">
+            <field name="name">Wizard Bookings</field>
+            <field name="model">reserves.w_bookings</field>
+            <field name="arch" type="xml">
+		    <form string="Select bookings">
+			    <header>
+				    <field name="state" widget="statusbar"/>
+                        <button name="accept" type="object"
+                                string="Accept" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+			    
+			    </header>
+			    <group>
+                    <group>
+                        <field name="client"/>
+                        <field name="countries" invisible="1"/>
+                        <field name="country" domain="[('id','in',countries)]"/>
+ 
+		</group>
+		<group states="city,requirements,room">
+                        <field name="city"/>
+		</group>
+		<group states="requirements,room">
+                        <field name="stars"/>
+                        <field name="score" widget='priority' readonly="1"/>
+                        <field name="beds"/>
+			<field name="services"/>
+		</group>
+		<group states="requirements,room">
+                        <field name="checking_day"/>
+			<field name="exit_day"/>
+		</group>
+	</group>
+		<group>
+			<field name="hotels" >
+				 <tree>
+					<field name="photo_small" widget="image"/>
+					<field name="name"/>
+					<field name="stars"/>
+                        		<field name="score" widget='priority'/>
+					<button name="book_it" string="Book it" type="object" context="{'b_client':parent.client,'b_rooms':parent.rooms,'b_c_day':parent.checking_day,'b_e_day':parent.exit_day}"/> 
+				</tree> 
+		</field>
+		</group>
+		<group states="room">
+                        <field name="rooms" invisible="1"/>
+                        <field name="hotel" domain="[('id','in',hotels)]"/>
+		</group>
+                    <footer>
+
+                    </footer>
+ 
+                </form>
+            </field>
+        </record>
+ 
+        <act_window id="reserves.act_w_bookings"
+                    name="Select bookings"
+                    src_model=""
+                    res_model="reserves.w_bookings"
+                    view_mode="form"
+		    target="new"
+		    context="{'aaaaa':123456}"
+                    key2="client_action_multi"/>		
+</data></odoo>

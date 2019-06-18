@@ -1,0 +1,52 @@
+<odoo>
+	<data noupdate="0">
+
+           <record id="reserves.city1" model="reserves.cities">
+             <field name="name">Budapest</field>
+             <field name="country" ref="base.hu"></field>
+           </record>
+           <record id="reserves.city2" model="reserves.cities">
+	     <field name="name">Los Angeles</field>
+             <field name="country" ref="base.us"></field>
+           </record>
+           <record id="reserves.city3" model="reserves.cities">
+	     <field name="name">Rocky Mountains</field>
+             <field name="country" ref="base.us"></field>
+           </record>
+
+           <record id="reserves.hotel1" model="reserves.hotels">
+             <field name="name">Gran Hotel Budapest</field>
+             <field name="city" ref="reserves.city1"></field>
+             <field name="services" eval="[(6,0,[ref('reserves.services_Gym'),ref('reserves.services_pool'),ref('reserves.services_Pets')] )]"></field>
+             <field name="stars">5</field>
+           </record>
+           <record id="reserves.hotel2" model="reserves.hotels">
+             <field name="name">Hotel California</field>
+             <field name="city" ref="reserves.city2"></field>
+             <field name="stars">2</field>
+             <field name="services" eval="[(6,0,[ref('reserves.services_pool'),ref('reserves.services_Pets')] )]"></field>
+            <field name="description">Welcome to the Hotel California
+Such a lovely place (such a lovely place)
+Such a lovely face.
+Plenty of room at the Hotel California
+Any time of year (any time of year) you can find it here</field>
+           </record>
+           <record id="reserves.hotel3" model="reserves.hotels">
+             <field name="name">Overlook Hotel</field>
+             <field name="city" ref="reserves.city3"></field>
+             <field name="stars">4</field>
+             <field name="services" eval="[(6,0,[ref('reserves.services_WiFi'),ref('reserves.services_restaurant'),ref('reserves.services_Gym')] )]"></field>
+            <field name="description">All work and no play makes Jack a dull boy.</field>
+           </record>
+           <record id="reserves.hotel4" model="reserves.hotels">
+             <field name="name">The Palms Motel</field>
+             <field name="city" ref="reserves.city2"></field>
+             <field name="stars">1</field>
+             <field name="services" eval="[(6,0,[ref('reserves.services_Gym'),ref('reserves.services_pool'),ref('reserves.services_Pets')] )]"></field>
+            <field name="description"></field>
+           </record>
+
+
+
+    </data>
+</odoo>

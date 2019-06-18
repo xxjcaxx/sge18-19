@@ -1,0 +1,12 @@
+<odoo>
+	<data>
+
+           <record id="reserves.product_reserva" model="product.product">
+             <field name="name">Hotel Booking</field>
+             <field name="type">service</field>
+           </record>
+
+
+
+    </data>
+</odoo>

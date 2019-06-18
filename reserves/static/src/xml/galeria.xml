@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="contador_template" xml:space="preserve">
+
+<t t-name="galeria_template">
+    <t t-foreach="elements" t-as="el">
+        <span t-attf-class="galeria"  t-att-data-index="el_index" t-att-data-id="el.id">
+		<!--		<span class="galeria" t-att-title="el.display_name"><t t-esc="el.display_name"/></span> --> 		<img class="img img-responsive" t-att-src='url' />
+            <span t-if="!readonly" class="fa fa-times o_delete"/>
+        </span>
+    </t>
+</t>
+
+</templates>

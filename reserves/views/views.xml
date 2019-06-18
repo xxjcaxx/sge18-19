@@ -1,0 +1,639 @@
+<odoo>
+	<data>
+		<!-- explicit list view definition -->
+		<record model="ir.ui.view" id="reserves.cities_list">
+			<field name="name">Cities List</field>
+			<field name="model">reserves.cities</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="description"/>
+					<field name="coordinates"/>
+					<field name="country"/>
+
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.cities_form">
+			<field name="name">Cities form</field>
+			<field name="model">reserves.cities</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="description"/>
+							<field name="coordinates"/>
+							<field name="country"/>
+					<button type="object" name="current_countries" string="Current Countries" context="{'city_name':name}"/>
+							<field name="hotels" context="{'default_city':active_id}"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="reserves.hotels_list">
+			<field name="name">Hotels List</field>
+			<field name="model">reserves.hotels</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="description"/>
+					<field name="address"/>
+					<field name="city"/>
+					<field name="phone"/>
+				        <field name="stars"/>  
+				        <field name="score" widget="priority"/> <!-- https://www.cybrosys.com/blog/widgets-in-odoo --> 
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.hotels_form">
+			<field name="name">Hotels form</field>
+			<field name="model">reserves.hotels</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<field name="photo_small"  widget="image" class="oe_avatar"/>
+				                        <div class="oe_title">	
+								<h1><field name="name"/></h1>
+								<h2> <field name="score" widget="priority"/></h2> <!-- https://www.cybrosys.com/blog/widgets-in-odoo --> 
+							</div>
+						<group>
+							<group>
+							<field name="address"/>
+							<field name="city"/>
+							<field name="phone"/>
+						</group>
+						<group>
+				                        <field name="stars"/>  
+							<field name="description"/>
+							<field name="today_ocupation" widget="percentpie"/>	
+
+						</group>
+							<field name="services">
+						   	 <kanban>
+					    		   <field name="name" />
+					    		   <field name="id" />
+					    		   <field name="icon_small" />
+					    		   <templates>
+					    		     <t t-name="kanban-box">
+						    	      <div t-attf-class="oe_kanban_card oe_kanban_global_click" style="-webkit-box-flex: 0; flex: none; width: 60px; min-width:60px; margin: 0px; border: none;">
+							        <a type="open">
+									<img t-att-src="kanban_image('reserves.services', 'icon_small', record.id.raw_value)" style="width:100%;"/>
+							        </a>
+						              </div>
+
+						             </t>
+					                  </templates>
+					                 </kanban>
+							</field>
+
+						</group>
+							<field name="week_ocupation" widget="dashboard_graph"  graph_type="bar"/>	
+							<notebook>
+								<page string="Photos">
+									<field name="photos" widget="m2m_galeria" image_field="photo_small" context="{'default_hotel':active_id}">
+								<!--  	 <kanban>
+					    		   <field name="name" />
+					    		   <field name="id" />
+					    		   <field name="photo_small" />
+					    		   <templates>
+					    		     <t t-name="kanban-box">
+						    	      <div t-attf-class="oe_kanban_card oe_kanban_global_click" style="-webkit-box-flex: 0; flex: none; width: 150px; margin: 0px; border: none; ">
+							        <a type="open">
+							          <img t-att-src="kanban_image('reserves.photos', 'photo_small', record.id.raw_value)"/>
+							        </a>
+						              </div>
+						             </t>
+					                  </templates>
+							 </kanban> -->
+						 </field>
+					 </page>
+					 <page string="Rooms">
+				 <button name="create_rooms" type="object" string="Create Rooms" class="oe_highlight" />
+				 <field name="rooms" context="{'default_hotel':active_id}" limit="5">
+					 <tree limit="5">
+						 <field name="name"/>
+						 <field name="beds"/>
+						 <field name="price"/>
+					 </tree>
+				 </field>
+					 </page>
+
+					 <page string="Comments">
+				 <button name="create_comments" type="object" string="Create Comments" class="oe_highlight" />
+				 <notebook><page string="Comments"> 
+							<field name="comments"  context="{'default_city':active_id}">
+						   	 <kanban>
+					    		   <field name="name" />
+					    		   <field name="id" />
+					    		   <field name="client_photo" />
+					    		   <templates>
+					    		     <t t-name="kanban-box">
+								     <div t-attf-class="oe_kanban_card oe_kanban_global_click" style="width: 100%; margin: 5px;">
+									     <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+							        <a type="open" style="float:left; ">
+									<img t-att-src="kanban_image('reserves.comments', 'client_photo', record.id.raw_value)"/>
+								</a>
+								<div style="width: 500px; float:left; margin: 0 0 0 10px;">
+									<field name="name"/><br/>	<field name="stars" widget="priority"/><br/><field name="client"/><br/>
+										<field name="comments"/><br/>
+								</div>
+						              </div>
+
+						             </t>
+					                  </templates>
+					                 </kanban>
+						 </field>
+						 </page>
+						 <page string="Comments List">
+							<field name="comments_list" context="{'default_city':active_id}">
+								<tree>
+									<field name="client"/><field name="name"/><field name="stars" widget="priority"/><button name="delete_comment" icon="fa-trash-o" type="object"/>
+								</tree>
+							</field>
+					</page>
+
+				</notebook>
+
+					 </page>
+					 <page string="Bookings">
+						 <group>
+							 <field name="past_bookings"/>
+							 <field name="present_bookings"/>
+							 <field name="future_bookings"/>
+						 </group>
+					</page>
+				 </notebook>
+
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.hotels_kanban">
+			<field name="name">Hotels kanban</field>
+			<field name="model">reserves.hotels</field>
+			<field name="arch" type="xml">
+		   	 <kanban>
+				 <field name="name" /> <field name="id"/>
+		   <field name="photo_small" />
+		   <templates>
+		     <t t-name="kanban-box">
+		      <div t-attf-class="oe_kanban_card oe_kanban_global_click" style="width:auto;" >
+			<a type="open">
+			  <img t-att-src="kanban_image('reserves.hotels', 'photo_small', record.id.value)"/> 
+
+		  </a>
+		 <div >
+                         <span style="font-size:1.2em;"><field name="name"/></span>
+                          <p >
+                         Address:    <field name="address"/><br/>
+			City: <field name="city"/><br/>
+			Phone: <field name="phone"/><br/>
+			Stars:  <field name="stars"/><br/>
+			Score:  <field name="score" widget="priority"/> <!-- https://www.cybrosys.com/blog/widgets-in-odoo --> 
+                          </p>
+                        </div> 
+			
+		      </div>
+		     </t>
+		  </templates>
+	  </kanban>
+  </field>
+		</record>
+		<record model="ir.ui.view" id="reserves.rooms_list">
+			<field name="name">Rooms List</field>
+			<field name="model">reserves.rooms</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="comments"/>
+					<field name="hotel"/>
+					<field name="beds"/>
+					<field name="price"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.rooms_form">
+			<field name="name">Rooms form</field>
+			<field name="model">reserves.rooms</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="hotel"/>
+							<field name="comments"/>
+							<field name="beds"/>
+							<field name="price"/>
+						</group>
+						<notebook>
+							<page string="Photos">
+							<field name="photos" mode="kanban" context="{'default_city':active_id}">
+						   	 <kanban>
+					    		   <field name="name" />
+					    		   <field name="id" />
+					    		   <field name="photo_small" />
+					    		   <templates>
+					    		     <t t-name="kanban-box">
+						    	      <div t-attf-class="oe_kanban_card oe_kanban_global_click" style="width: 120px; margin: 0px; border: none; ">
+							        <a type="open">
+							          <img t-att-src="kanban_image('reserves.photosrooms', 'photo_small', record.id.raw_value)"/>
+							        </a>
+						              </div>
+						             </t>
+					                  </templates>
+					                 </kanban>
+						 </field>
+					 </page>
+					 <page string="Bookings">
+						 <field name="bookings">
+					 <tree>
+						 <field name="name"/>
+						 <field name="client"/>
+						 <field name="checking_day"/>
+						 <field name="exit_day"/>
+						 <field name="days"/>
+						 <field name="price"/>
+					 </tree>
+				 </field>
+					 </page>
+					 </notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.photos_list">
+			<field name="name">Photos List</field>
+			<field name="model">reserves.photos</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="hotel"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.photos_form">
+			<field name="name">Photos form</field>
+			<field name="model">reserves.photos</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="hotel"/>
+							<field name="photo" widget="image"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.photosrooms_form">
+			<field name="name">Photos form</field>
+			<field name="model">reserves.photosrooms</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="room"/>
+							<field name="photo" widget="image"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.services_tree">
+			<field name="name">Services tree</field>
+			<field name="model">reserves.services</field>
+			<field name="arch" type="xml">
+				<tree>
+							<field name="icon_small" widget="image"/>
+							<field name="name"/>
+							<field name="description"/>
+
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.services_form">
+			<field name="name">Services form</field>
+			<field name="model">reserves.services</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="description"/>
+							<field name="icon" widget="image"/>
+							<field name="hotels">
+								<tree>
+									<field name="name"/>
+									<field name="city"/>
+									<field name="address"/>
+									<field name="phone"/>
+									<field name="stars"/>
+								</tree>
+							</field>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.bookings_list">
+			<field name="name">Bookings List</field>
+			<field name="model">reserves.bookings</field>
+			<field name="arch" type="xml">
+				<tree decoration-danger="color=='past'" decoration-bf="color=='current'" decoration-info="color=='future'" decoration-success="color=='today'">
+					<field name="name"/>
+					<!--	<field name="hotel"/>
+					<field name="room"/>
+					<field name="client"/> -->
+					<field name="checking_day"/>
+					<field name="exit_day"/>
+					<field name="days"/>
+					<field name="color" invisible="1"/>
+					<field name="price"/>
+					<field name="order_line"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.bookings_form">
+			<field name="name">Bookings form</field>
+			<field name="model">reserves.bookings</field>
+			<field name="arch" type="xml">
+				<form string="Bookings">
+					<sheet>
+						<label for="city_aux" class="oe_edit_only"/><field name="city_aux" class="oe_edit_only"/>
+						<label for="hotel_aux" class="oe_edit_only"/><field name="hotel_aux" class="oe_edit_only"/>
+					<group>
+						<field name="name"/>
+
+						<field name="hotel"/>
+						<field name="room"/>
+						<field name="client"/>
+						<field name="checking_day"/>
+						<field name="exit_day"/>
+					<field name="days"/>
+					<field name="price"/></group>
+				<notebook><page name="sale_order" string="Sale Order"><group>
+					<field name="sale_order"/>
+						<field name="order_line">
+						</field>
+						<button name="create_sale"  string="Create Sale" type="object" attrs="{'invisible':[('order_line', '!=', False)]}"/>
+			</group></page></notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.bookings_cal">
+			<field name="name">Bookings cal</field>
+			<field name="model">reserves.bookings</field>
+			<field name="arch" type="xml">
+				<calendar date_start="checking_day" date_stop="exit_day" color="hotel">
+						<field name="name"/>
+				</calendar>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.comments_list">
+			<field name="name">Comments List</field>
+			<field name="model">reserves.comments</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="hotel"/>
+					<field name="comments"/>
+					<field name="stars" widget='priority'/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.comments_form">
+			<field name="name">Comments form</field>
+			<field name="model">reserves.comments</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+					<field name="client_photo" widget="image"/>
+						<group>
+					<field name="name"/>
+					<field name="hotel"/>
+					<field name="client"/>
+					<field name="comments"/>
+					<field name="stars" widget='priority'/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+   <record model="ir.ui.view" id="reserves.sale_order_line_form">
+      <field name="name">Sale order line form</field>
+      <field name="priority" >20</field>
+      <field name="model">sale.order.line</field>
+      <field name="arch" type="xml">
+	      <form ><sheet><group>
+           <field name="name"/>
+           <field name="product_id" />
+           <field name="order_id"/> 
+           <field name="price_unit"/>
+	   <field name="booking">
+		   <tree>
+
+					<field name="name"/>
+		   </tree>
+
+	   </field>
+           <field name="room"/>
+           <field name="hotel"/>
+           <field name="client"/>
+           <field name="checking_day"/>
+           <field name="exit_day"/>
+	   </group></sheet> </form>
+      </field>
+    </record>  
+   <record model="ir.ui.view" id="reserves.sale_order_line_tree">
+      <field name="name">Sale order line tree</field>
+      <field name="priority" >20</field>
+      <field name="model">sale.order.line</field>
+      <field name="arch" type="xml">
+	      <tree>
+           <field name="order_id"/> 
+	   <field name="booking"/>
+           <field name="room"/>
+           <field name="hotel"/>
+           <field name="client"/>
+           <field name="checking_day"/>
+           <field name="exit_day"/>
+            </tree>
+      </field>
+    </record>  
+
+		<record model="ir.ui.view" id="reserves.sale_order_form">
+			<field name="name">Sale form</field>
+			<field name="model">sale.order</field>
+			 <field name="inherit_id" ref="sale.view_order_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+					<field name="booking"/>
+		</xpath>
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="reserves.clients_list">
+			<field name="name">Clients List</field>
+			<field name="model">res.partner</field>
+			<field name="arch" type="xml">
+				<tree decoration-danger="len(bookings_fs)>0">
+					<field name="name"/>
+					<field name="comments"/>
+					<field name="bookings"/>
+					<field name="bookings_fs" invisible="1"/>
+				</tree>
+			</field>
+		</record>
+	<record model="ir.ui.view" id="reserves.clients_form">
+		<field name="name">Clients form</field>
+		<field name="model">res.partner</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+				<field name="image" widget="image"/>
+					<group>
+
+				<field name="name"/>
+				</group>
+
+				<notebook><page name="bookings" string="Bookings">
+					<field name="bookings" limit="10" class="reserves_tree">
+					</field>
+					<h4>Bookings for sale</h4>
+					<field name="bookings_fs" />
+					<button name="create_sale"  string="Create Sale for all bookings" type="object" attrs="{'invisible':[('bookings_fs', '=', [])]}"/>
+					<button name="%(reserves.act_w_clients_bookings)d" type="action" string="Select bookings" class="oe_highlight" attrs="{'invisible':[('bookings_fs','=',[])]}" context="{'b_fs':bookings_fs}" />
+					<!-- Li passe per context un field amb els bookings for sale calculats -->
+				    	 </page>
+					<page name="comments" string="Comments">
+								<field name="comments"/>
+					</page>
+				</notebook>
+			</sheet>
+			</form>
+		</field>
+	</record>
+		<record model="ir.ui.view" id="reserves.clients_partner_form">
+			<field name="name">Clients form</field>
+			<field name="model">res.partner</field>
+			 <field name="inherit_id" ref="base.view_partner_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//page[@name='internal_notes']" position="after">
+					<page name="reserves" string="Reserves"><group>
+					<field name="comments"/>
+					<field name="bookings"/>
+			</group></page>
+		</xpath>
+			</field>
+		</record>
+
+
+		<!-- actions opening views on models -->
+		<record model="ir.actions.act_window" id="reserves.action_cities_window">
+			<field name="name">Cities Window</field>
+			<field name="res_model">reserves.cities</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="reserves.action_hotels_window">
+			<field name="name">Hotels Window</field>
+			<field name="res_model">reserves.hotels</field>
+			<field name="view_mode">kanban,tree,form</field>
+		</record>
+		<record model="ir.actions.act_window" id="reserves.action_rooms_window">
+			<field name="name">Rooms Window</field>
+			<field name="res_model">reserves.rooms</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record model="ir.actions.act_window" id="reserves.action_photos_window">
+			<field name="name">Photos Window</field>
+			<field name="res_model">reserves.photos</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record model="ir.actions.act_window" id="reserves.action_photosroom_window">
+			<field name="name">Photos Room Window</field>
+			<field name="res_model">reserves.photosrooms</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record model="ir.actions.act_window" id="reserves.action_services_window">
+			<field name="name">Services Window</field>
+			<field name="res_model">reserves.services</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record model="ir.actions.act_window" id="reserves.action_bookings_window">
+			<field name="name">Bookings Window</field>
+			<field name="res_model">reserves.bookings</field>
+			<field name="view_mode">tree,form,calendar</field>
+			<field name="context">{'search_default_not_past':1}</field>
+		</record>
+	
+	
+		<record model="ir.actions.act_window" id="reserves.action_sale_window">
+			<field name="name">sale Window</field>
+			<field name="res_model">sale.order.line</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain"> [('booking','!=',False)]</field>
+		</record>
+		<record model="ir.actions.act_window.view" id="reserves.act_view_sale_tree">
+		    <field eval="1" name="sequence"/>
+		    <field name="view_mode">tree</field>
+		    <field name="view_id" ref="reserves.sale_order_line_tree"/>
+		    <field name="act_window_id" ref="reserves.action_sale_window"/>
+		</record>
+		 
+		<record model="ir.actions.act_window.view" id="reserves.act_view_sale_form">
+		    <field eval="2" name="sequence"/>
+		    <field name="view_mode">form</field>
+		    <field name="view_id" ref="reserves.sale_order_line_form"/>
+		    <field name="act_window_id" ref="reserves.action_sale_window"/>
+	    </record>
+
+
+		<record model="ir.actions.act_window" id="reserves.action_client_window">
+			<field name="name">sale Window</field>
+			<field name="res_model">res.partner</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain"></field>
+			<field name="context">{'search_default_bookings':1}</field>
+		</record>
+		<record model="ir.actions.act_window.view" id="reserves.act_view_client_tree">
+		    <field eval="1" name="sequence"/>
+		    <field name="view_mode">tree</field>
+		    <field name="view_id" ref="reserves.clients_list"/>
+		    <field name="act_window_id" ref="reserves.action_client_window"/>
+		</record>
+		 
+		<record model="ir.actions.act_window.view" id="reserves.act_view_client_form">
+		    <field eval="2" name="sequence"/>
+		    <field name="view_mode">form</field>
+		    <field name="view_id" ref="reserves.clients_form"/>
+		    <field name="act_window_id" ref="reserves.action_client_window"/>
+		</record>
+
+    <!-- Top menu item -->
+    <menuitem name="Reserves" id="reserves.menu_root"/>
+    <!-- menu categories -->
+    <menuitem name="Data" id="reserves.menu_1" parent="reserves.menu_root"/>
+    <!-- actions -->
+    <menuitem name="Cities" id="reserves.menu_1_list" parent="reserves.menu_1" action="reserves.action_cities_window"/>
+    <menuitem name="Hotels" id="reserves.menu_2_list" parent="reserves.menu_1" action="reserves.action_hotels_window"/>
+    <menuitem name="Rooms" id="reserves.menu_3_list" parent="reserves.menu_1" action="reserves.action_rooms_window"/>
+    <menuitem name="Photos" id="reserves.menu_4_list" parent="reserves.menu_1" action="reserves.action_photos_window"/>
+    <menuitem name="Photos Rooms" id="reserves.menu_5_list" parent="reserves.menu_1" action="reserves.action_photosroom_window"/>
+    <menuitem name="Services" id="reserves.menu_6_list" parent="reserves.menu_1" action="reserves.action_services_window"/>
+    <menuitem name="Bookings" id="reserves.menu_7_list" parent="reserves.menu_1" action="reserves.action_bookings_window"/>
+    <menuitem name="Bookings Wizard" id="reserves.menu_71_list" parent="reserves.menu_7_list" action="reserves.act_w_bookings"/>
+    <menuitem name="Sales" id="reserves.menu_8_list" parent="reserves.menu_1" action="reserves.action_sale_window"/>
+    <menuitem name="Clients" id="reserves.menu_9_list" parent="reserves.menu_1" action="reserves.action_client_window"/>
+  </data>
+</odoo>

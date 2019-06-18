@@ -1,0 +1,87 @@
+<odoo><data>
+
+		
+		<record model="ir.ui.view" id="reserves.cities_search">
+			<field name="name">Cities Search</field>
+			<field name="model">reserves.cities</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name"/>
+					<field name="country"/>
+					<filter name="group_by_country" string="Country" context="{'group_by': 'country'}"/>
+				</search>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.hotels_search">
+			<field name="name">Hotel Search</field>
+			<field name="model">reserves.hotels</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name"/>
+					<field name="city"/>
+					<field name="country"/>
+					<field name="stars"/>
+					<filter name="1star" string="⭐" domain="[('stars', '=','1')]"/>
+					<filter name="2star" string="⭐⭐" domain="[('stars', '=', '2')]"/>
+					<filter name="3star" string="⭐⭐⭐" domain="[('stars', '=', '3')]"/>
+					<filter name="4star" string="⭐⭐⭐⭐" domain="[('stars', '=', '4')]"/>
+					<filter name="5star" string="⭐⭐⭐⭐⭐" domain="[('stars', '=', '5')]"/>
+
+					<filter name="group_by_city" string="City" context="{'group_by': 'city'}"/>
+					<filter name="group_by_country" string="Country" context="{'group_by': 'country'}"/>
+					<filter name="group_by_stars" string="Stars" context="{'group_by': 'stars'}"/>
+				</search>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.rooms_search">
+			<field name="name">Rooms search</field>
+			<field name="model">reserves.rooms</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name"/>
+					<field name="hotel"/>
+					<field name="city"/>
+					<field name="beds"/>
+					<filter name="group_by_hotel" string="Hotel" context="{'group_by': 'hotel'}"/>
+					<filter name="group_by_city" string="City" context="{'group_by': 'city'}"/>
+					<filter name="group_by_beds" string="Beds" context="{'group_by': 'beds'}"/>
+				</search>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="reserves.bookings_search">
+			<field name="name">Bookings search</field>
+			<field name="model">reserves.bookings</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name"/>
+					<field name="hotel"/>
+					<field name="room"/>
+					<field name="checking_day"/>
+					<field name="exit_day"/>
+					<field name="client"/>
+					<filter name="current" string="Current Bookings" domain="[('exit_day', '&gt;=', datetime.date.today().strftime('%Y-%m-%d')),('checking_day', '&lt;=',datetime.date.today().strftime('%Y-%m-%d'))]"/> 
+					<filter name="past" string="Past Bookings" domain="[('exit_day', '&lt;=',datetime.date.today().strftime('%Y-%m-%d'))]"/> 
+					<filter name="not_past" string="No obsolete Bookings" domain="[('exit_day', '&gt;=', datetime.date.today().strftime('%Y-%m-%d'))]"/> 
+					<filter name="future" string="Future Bookings" domain="[('checking_day', '&gt;=', datetime.date.today().strftime('%Y-%m-%d'))]"/> 
+					<filter name="today" string="Bookings checking today" domain="[('checking_day', '=',datetime.date.today().strftime('%Y-%m-%d'))]"/> 
+					<filter name="group_by_hotel" string="Hotel" context="{'group_by': 'hotel'}"/>
+					<filter name="group_by_room" string="Room" context="{'group_by': 'room'}"/>
+					<filter name="group_by_checking_day" string="Checking" context="{'group_by': 'checking_day:day'}"/>
+					<filter name="group_by_exit_day" string="Exit" context="{'group_by': 'exit_day:day'}"/>
+					<filter name="group_by_client" string="Client" context="{'group_by': 'client'}"/>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="reserves.clients_search">
+			<field name="name">Rooms search</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_res_partner_filter"/>
+			<field name="arch" type="xml">
+				<filter name="inactive" position="after">
+					<field name="name"/>
+					<filter name="bookings" string="Clients with bookings" domain="[('bookings', '!=', False)]"/> 
+				</filter>
+			</field>
+		</record>
+</data></odoo>
